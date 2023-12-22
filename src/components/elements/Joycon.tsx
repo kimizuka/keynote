@@ -26,11 +26,19 @@ export function Joycon({
   onClickL = function() {},
   onClickR = function() {},
   onStickL = function(_x: number, _y: number) {},
+  onClickUp = function() {},
+  onClickDown = function() {},
+  onClickLeft = function() {},
+  onClickRight = function() {}
 }) {
   let JoyCon: any;
   const [ deviceList, setDeviceList ] = useState<string[]>([]);
   const [ isPressL, setIsPressL ] = useState(false);
   const [ isPressR, setIsPressR ] = useState(false);
+  const [ isPressUp, setIsPressUp ] = useState(false);
+  const [ isPressDown, setIsPressDown ] = useState(false);
+  const [ isPressLeft, setIsPressLeft ] = useState(false);
+  const [ isPressRight, setIsPressRight ] = useState(false);
 
   useEffect(() => {
     if (isPressL) {
@@ -43,6 +51,30 @@ export function Joycon({
       onClickR();
     }
   }, [isPressR]);
+
+  useEffect(() => {
+    if (isPressR) {
+      onClickUp();
+    }
+  }, [isPressUp]);
+
+  useEffect(() => {
+    if (isPressDown) {
+      onClickDown();
+    }
+  }, [isPressDown]);
+
+  useEffect(() => {
+    if (isPressLeft) {
+      onClickLeft();
+    }
+  }, [isPressLeft]);
+
+  useEffect(() => {
+    if (isPressRight) {
+      onClickRight();
+    }
+  }, [isPressRight]);
 
   try {
     JoyCon = require('@/scripts/joy-con-webhid/dist/index.js');
@@ -74,6 +106,10 @@ export function Joycon({
 
       joyCon.addEventListener('hidinput', ({ detail }: any) => {
         if (Object.keys(detail.buttonStatus).includes('l')) {
+          setIsPressUp(!!detail.buttonStatus.up);
+          setIsPressDown(!!detail.buttonStatus.down);
+          setIsPressLeft(!!detail.buttonStatus.left);
+          setIsPressRight(!!detail.buttonStatus.right);
           setIsPressL(!!detail.buttonStatus.l);
           onStickL(Number(detail.analogStickLeft.horizontal), Number(detail.analogStickLeft.vertical));
         } else if (Object.keys(detail.buttonStatus).includes('r')) {
