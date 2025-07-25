@@ -14,16 +14,8 @@ export function IndexPageTemplate() {
   const [ pageIndex, setPageIndex ] = useState(pageIndexRef.current);
   const [ slides, setSlides ] = useState<JSX.Element[]>([]);
   const [ isShake, setIsShake ] = useState(false);
-
-  const handleKeyDown = useCallback((evt: KeyboardEvent) => {
-    if (evt.key === 'ArrowLeft') {
-      pageIndexRef.current = Math.max(pageIndex - 1, 0);
-    } else if (evt.key === 'ArrowRight') {
-      pageIndexRef.current = Math.min(pageIndex + 1, slideList.length - 1);
-    }
-
-    setPageIndex(pageIndexRef.current);
-  }, [pageIndex]);
+  const [ x, setX ] = useState(0);
+  const [ y, setY ] = useState(0);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -33,15 +25,33 @@ export function IndexPageTemplate() {
     };
   }, [handleKeyDown]);
 
-  const handleClickBtnLeft = useCallback(() => {
-    pageIndexRef.current = Math.max(pageIndex - 1, 0);
-    setPageIndex(pageIndexRef.current);
-  }, [pageIndex]);
-
-  const handleClickBtnRight = useCallback(() => {
+  const goToNextPage = useCallback(() => {
     pageIndexRef.current = Math.min(pageIndex + 1, slideList.length - 1);
     setPageIndex(pageIndexRef.current);
+    setIsShake(false);
   }, [pageIndex]);
+
+  const goToPrevPage = useCallback(() => {
+    pageIndexRef.current = Math.max(pageIndex - 1, 0);
+    setPageIndex(pageIndexRef.current);
+    setIsShake(false);
+  }, [pageIndex]);
+
+  function handleKeyDown(evt: KeyboardEvent) {
+    if (evt.key === 'ArrowLeft') {
+      goToPrevPage();
+    } else if (evt.key === 'ArrowRight') {
+      goToNextPage();
+    }
+  }
+
+  function handleClickBtnLeft() {
+    goToPrevPage();
+  }
+
+  function handleClickBtnRight() {
+    goToNextPage();
+  }
 
   const handleMoveJoyCon = useCallback(() => {
     window.clearTimeout(timerRef.current);
@@ -81,6 +91,9 @@ export function IndexPageTemplate() {
     <Wrapper
       data-is-shake={ isShake }
       className="index-page-template"
+      style={{
+        transform: `translate(${ x * 10 }%, ${ y * 10 }%)`
+      }}
     >
       <ol>
         { slides[pageIndex] }
@@ -89,6 +102,10 @@ export function IndexPageTemplate() {
         onMoveL={ handleMoveJoyCon }
         onClickLeft={ handleClickBtnLeft }
         onClickRight={ handleClickBtnRight } 
+        onStickL={(x, y) => {
+          setX(x);
+          setY(y);
+        }}
       />
     </Wrapper>
   );

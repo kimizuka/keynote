@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { mean } from 'lodash';
-import { MouseEvent, useEffect, useState } from 'react';
+import { type MouseEvent, useEffect, useState } from 'react';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -20,16 +20,16 @@ const Wrapper = styled.div`
 `;
 
 export function Joycon({
-  onMove = function() {},
-  onMoveL = function() {},
-  onMoveR = function() {},
-  onClickL = function() {},
-  onClickR = function() {},
-  onStickL = function(_x: number, _y: number) {},
-  onClickUp = function() {},
-  onClickDown = function() {},
-  onClickLeft = function() {},
-  onClickRight = function() {}
+  onMove = () => {},
+  onMoveL = () => {},
+  onMoveR = () => {},
+  onClickL = () => {},
+  onClickR = () => {},
+  onStickL = (_x: number, _y: number) => {},
+  onClickUp = () => {},
+  onClickDown = () => {},
+  onClickLeft = () => {},
+  onClickRight = () => {},
 }) {
   let JoyCon: any;
   const [ deviceList, setDeviceList ] = useState<string[]>([]);
@@ -148,7 +148,12 @@ export function Joycon({
 
   return (
     <Wrapper>
-      <button onClick={ handleClickBtnConnect }>connect</button>
+      <button
+        type="button"
+        onClick={ handleClickBtnConnect }
+      >
+        connect
+      </button>
       <ul>
         {deviceList.map((name, i) => {
           return (
