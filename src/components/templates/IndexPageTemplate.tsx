@@ -1,7 +1,7 @@
 'use client';
 
 import styled, { keyframes } from 'styled-components';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, ReactNode } from 'react';
 import { SlideType, slideList } from '@/scripts/slideList';
 import { TextSlide } from '@/components/elements/TextSlide';
 import { ImageSlide } from '@/components/elements/ImageSlide';
@@ -12,7 +12,7 @@ export function IndexPageTemplate() {
   const timerRef = useRef<number>(-1);
   const pageIndexRef = useRef(0);
   const [ pageIndex, setPageIndex ] = useState(pageIndexRef.current);
-  const [ slides, setSlides ] = useState<JSX.Element[]>([]);
+  const [ slides, setSlides ] = useState<ReactNode[]>([]);
   const [ isShake, setIsShake ] = useState(false);
   const [ x, setX ] = useState(0);
   const [ y, setY ] = useState(0);
